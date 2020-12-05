@@ -123,19 +123,29 @@ lazy val allConfigDependency = "compile->compile;test->test"
 
 val sigmaStateVersion = "3.3.1"
 val ergoWalletVersion = "v3.3.3-c42d8b5b-SNAPSHOT"
-lazy val sigmaState = ("org.scorexfoundation" %% "sigma-state" % sigmaStateVersion).force()
-    .exclude("ch.qos.logback", "logback-classic")
-    .exclude("org.scorexfoundation", "scrypto")
-    .exclude("org.typelevel", "machinist")
-    .exclude("org.typelevel", "cats-kernel")
+
+lazy val sigmaState = RootProject(uri("git://github.com/ScorexFoundation/sigmastate-interpreter.git#develop"))
+
+// lazy val sigmaState = ("org.scorexfoundation" %% "sigma-state" % sigmaStateVersion).force()
+//    .exclude("ch.qos.logback", "logback-classic")
+//    .exclude("org.scorexfoundation", "scrypto")
+//    .exclude("org.typelevel", "machinist")
+//    .exclude("org.typelevel", "cats-kernel")
+
+excludeDependencies ++= Seq(
+  ExclusionRule("ch.qos.logback", "logback-classic"),
+  ExclusionRule("org.scorexfoundation", "scrypto"),
+  ExclusionRule("org.typelevel", "machinist"),
+  ExclusionRule("org.typelevel", "cats-kernel")
+)
 
 lazy val ergoWallet = "org.ergoplatform" %% "ergo-wallet" % ergoWalletVersion
 
 lazy val mockWebServer = "com.squareup.okhttp3" % "mockwebserver" % "3.12.0" % "test"
 
 libraryDependencies ++= Seq(
-  sigmaState,
-  (sigmaState % Test).classifier("tests"),
+  //sigmaState,
+  //(sigmaState % Test).classifier("tests"),
   ergoWallet,
   "org.scalatest" %% "scalatest" % "3.0.8" % "test",
   "org.scalacheck" %% "scalacheck" % "1.14.+" % "test",
@@ -201,6 +211,7 @@ lazy val libImpl = (project in file("lib-impl"))
 
 lazy val appkit = (project in file("appkit"))
     .dependsOn(
+      sigmaState,
       common % allConfigDependency,
       javaClientGenerated % allConfigDependency,
       libApi % allConfigDependency,
