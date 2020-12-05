@@ -77,8 +77,7 @@ val mockitoScalaVerstion = "1.11.4"
 
 lazy val testingDependencies = Seq(
   "org.scalatest" %% "scalatest" % "3.0.8" % "test",
-  "org.scalacheck" %% "scalacheck" % "1.14.+" % "test",
-  (sigmaState % Test).classifier("tests")
+  "org.scalacheck" %% "scalacheck" % "1.14.+" % "test"
 )
 
 lazy val testSettings = Seq(
@@ -181,11 +180,10 @@ lazy val common = (project in file("common"))
       name := "common",
       resolvers ++= allResolvers,
       libraryDependencies ++= Seq(
-        sigmaState,
         ergoWallet
       ),
       publish / skip := true
-    )
+    ).dependsOn(sigmaState)
 
 lazy val libApi = (project in file("lib-api"))
     .dependsOn(common % allConfigDependency)
